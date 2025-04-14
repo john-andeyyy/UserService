@@ -23,6 +23,7 @@ namespace UserService.Controllers
         {
             var manager = new ProviderManager();
             var result = manager.InsertProvider(provider);
+
             if (!result)
             {
                 return BadRequest(new { Message = "Error creating provider" });
@@ -61,15 +62,14 @@ namespace UserService.Controllers
         }
 
         [HttpPut("Provider")]
-        public IActionResult UpdateProvider(int id, [FromBody] ProviderRequest provider)
+        public IActionResult UpdateProvider( [FromBody] ProviderRequest provider)
         {
             var manager = new ProviderManager();
-            var existingProvider = manager.GetProviderById(id);
+            var existingProvider = manager.GetProviderById(provider.Party_Id);
             if (existingProvider == null)
             {
                 return NotFound(new { Message = "Provider not found" });
             }
-            provider.PARTY_ID = id;
             var result = manager.UpdateProvider(provider);
             if (!result)
             {

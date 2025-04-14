@@ -24,9 +24,14 @@ namespace UserService.Models.Manager
                         {
                             ProviderResponse provider = new ProviderResponse
                             {
-                                PARTY_ID = reader.GetInt32("PARTY_ID"),
-                                PARTY_API_ENDPOINT = reader.GetString("PARTY_API_ENDPOINT"),
-                                PARTY_API_NAME = reader.GetString("PARTY_API_NAME")
+                                Party_Id = reader.GetInt32("Party_Id"),
+                                Party_API_ENDPOINT = reader.GetString("Party_API_ENDPOINT"),
+                                Party_API_NAME = reader.GetString("Party_API_NAME"),
+                                Party_METHOD = reader.GetString("Party_API_NAME"),
+                                Party_CODE = reader.GetString("Party_CODE")
+
+                                
+
                             };
                             providerList.Add(provider);
                         }
@@ -38,6 +43,7 @@ namespace UserService.Models.Manager
 
 
         }
+
         public ProviderResponse GetProviderById(int Id)
         {
             ProviderResponse provider = null;
@@ -47,7 +53,7 @@ namespace UserService.Models.Manager
                 try
                 {
                     conn.Open();
-                    string query = "SELECT * FROM 3RD_PARTY_ENDPOINT WHERE PARTY_ID = @Id AND Status = 'A'";
+                    string query = "SELECT * FROM 3RD_PARTY_ENDPOINT WHERE Party_Id = @Id AND Status = 'A'";
                     using (var sql = new MySqlCommand(query, conn))
                     {
                         sql.Parameters.AddWithValue("@Id", Id);
@@ -56,9 +62,9 @@ namespace UserService.Models.Manager
                             if (reader.Read())
                             {
                                 provider = new ProviderResponse();
-                                provider.PARTY_ID = reader.GetInt32("PARTY_ID");
-                                provider.PARTY_API_ENDPOINT = reader.GetString("PARTY_API_ENDPOINT");
-                                provider.PARTY_API_NAME = reader.GetString("PARTY_API_NAME");
+                                provider.Party_Id = reader.GetInt32("Party_Id");
+                                provider.Party_API_ENDPOINT = reader.GetString("Party_API_ENDPOINT");
+                                provider.Party_API_NAME = reader.GetString("Party_API_NAME");
                             }
                         }
                     }
@@ -81,13 +87,20 @@ namespace UserService.Models.Manager
                 {
 
                     conn.Open();
-                    string query = "INSERT INTO 3RD_PARTY_ENDPOINT (PARTY_API_ENDPOINT, PARTY_API_NAME) VALUES (@endpoint, @name)";
+                    string query = @"INSERT INTO 3RD_PARTY_ENDPOINT (Party_API_ENDPOINT, Party_API_NAME, PARTY_METHOD,PARTY_CODE) 
+VALUES (@endpoint, @name, @Party_METHOD, @Party_CODE)";
                     var sql = new MySqlCommand(query, conn);
 
-                    sql.Parameters.AddWithValue("@endpoint", provider.PARTY_API_ENDPOINT);
-                    sql.Parameters.AddWithValue("@name", provider.PARTY_API_NAME);
+                    sql.Parameters.AddWithValue("@endpoint", provider.Party_API_ENDPOINT);
+                    sql.Parameters.AddWithValue("@name", provider.Party_API_NAME);
+                    sql.Parameters.AddWithValue("@Party_METHOD", provider.Party_METHOD);
+                    sql.Parameters.AddWithValue("@Party_CODE", provider.Party_CODE);
+
+                    
+
                     sql.ExecuteNonQuery();
                     IsOkay = true;
+
 
                 }
                 catch (Exception ex)
@@ -109,7 +122,7 @@ namespace UserService.Models.Manager
                 try
                 {
                     conn.Open();
-                    string query = "UPDATE 3RD_PARTY_ENDPOINT SET Status = 'D' WHERE PARTY_ID = @Id";
+                    string query = "UPDATE 3RD_PARTY_ENDPOINT SET Status = 'D' WHERE Party_Id = @Id";
                     var sql = new MySqlCommand(query, conn);
                     sql.Parameters.AddWithValue("@Id", Id);
                     sql.ExecuteNonQuery();
@@ -133,11 +146,17 @@ namespace UserService.Models.Manager
                 try
                 {
                     conn.Open();
-                    string query = "UPDATE 3RD_PARTY_ENDPOINT SET PARTY_API_ENDPOINT = @endpoint, PARTY_API_NAME = @name WHERE PARTY_ID = @Id";
+                    string query = @"UPDATE 3RD_PARTY_ENDPOINT SET Party_API_ENDPOINT = @endpoint, 
+                                    Party_API_NAME = @name ,PARTY_METHOD = @PARTY_METHOD,PARTY_CODE = @Party_CODE
+                                    WHERE Party_Id = @Id";
                     var sql = new MySqlCommand(query, conn);
-                    sql.Parameters.AddWithValue("@endpoint", provider.PARTY_API_ENDPOINT);
-                    sql.Parameters.AddWithValue("@name", provider.PARTY_API_NAME);
-                    sql.Parameters.AddWithValue("@Id", provider.PARTY_ID);
+                    sql.Parameters.AddWithValue("@endpoint", provider.Party_API_ENDPOINT);
+                    sql.Parameters.AddWithValue("@name", provider.Party_API_NAME);
+                    sql.Parameters.AddWithValue("@Id", provider.Party_Id);
+                    sql.Parameters.AddWithValue("@Party_METHOD", provider.Party_METHOD);
+                    sql.Parameters.AddWithValue("@Party_CODE", provider.Party_CODE);
+
+
                     sql.ExecuteNonQuery();
                     IsOkay = true;
                 }
@@ -149,7 +168,7 @@ namespace UserService.Models.Manager
             return IsOkay;
         }
 
-      
+
 
     }
 }
