@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserService.Models.Manager;
 using UserService.Models.Request;
 
@@ -6,6 +7,7 @@ namespace UserService.Controllers
 {
     [Route("api/Provider/")]
     [ApiController]
+    [Authorize(Policy = "AuthPolicy")]
     public class ProviderController : Controller
     {
        

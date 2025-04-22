@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System;
 using Model.Manager;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 //using TODO_API_net.Models.basicAuth;/
 //using static TODO_API_net.Models.basicAuth.BasicAuthServices;
@@ -52,6 +54,61 @@ namespace UserService
 
             services.AddHttpContextAccessor();
             services.AddControllers();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidateLifetime = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SIGNING_KEY"))),
+                        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AuthPolicy", policy =>
+                {
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireAssertion((authHandlerContext) =>
+                    {
+                        var claims = authHandlerContext.User.Claims;
+
+                        try
+                        {
+                            string Username = claims.First(x => x.Type == "Username").Value;
+                            var manager = new UserManager();
+                            var isvalid = manager.GetUserByUsername(Username);
+
+
+
+                            if (!String.IsNullOrEmpty(isvalid?.Username)) { return true; } else { return false; }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message.ToString());
+                            return false;
+                        }
+                    });
+                });
+            });
+
+            var jwtSettings = new JwtSettings();
+            jwtSettings.IssuerSigningKey = Environment.GetEnvironmentVariable("SIGNING_KEY");
+            jwtSettings.ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            jwtSettings.ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+            jwtSettings.ExpirationSeconds = int.Parse(Environment.GetEnvironmentVariable("EXPIRATION_SECONDS"));
+
+            services.AddSingleton(jwtSettings);
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -77,18 +134,18 @@ namespace UserService
                     Console.WriteLine($"X Database connection failed: {error.Message}");
                 }
 
-                try
-                {
-                    var migrator = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                    //migrator.MigrateDown(0);// remove all
-                    migrator.MigrateUp();
-                    Console.WriteLine("Migrations applied successfully!");
-                }
-                catch (Exception error)
-                {
-                    Console.WriteLine($"X Migration failed: {error.Message}");
-                }
-                Console.WriteLine("\n");
+                //try
+                //{
+                //    var migrator = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+                //    //migrator.MigrateDown(0);// remove all
+                //    migrator.MigrateUp();
+                //    Console.WriteLine("Migrations applied successfully!");
+                //}
+                //catch (Exception error)
+                //{
+                //    Console.WriteLine($"X Migration failed: {error.Message}");
+                //}
+                //Console.WriteLine("\n");
 
 
             }

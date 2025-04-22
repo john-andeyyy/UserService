@@ -264,5 +264,43 @@ namespace Model.Manager
                 return isOK;
             }
         }
+
+
+        public UserData_WithoutPassword  GetUserByUsername(string Username)
+        {
+            UserData_WithoutPassword loggedInUser = null;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM users WHERE Username = @Username AND Status = 'A'";
+                    MySqlCommand sql = new MySqlCommand(query, conn);
+                    sql.Parameters.AddWithValue("@Username", Username);
+                    MySqlDataReader reader = sql.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        loggedInUser = new UserData_WithoutPassword
+                        {
+                            Id = int.Parse(dt.Rows[0]["Id"].ToString()),
+                            LastName = dt.Rows[0]["LastName"].ToString(),
+                            FirstName = dt.Rows[0]["FirstName"].ToString(),
+                            MiddleName = dt.Rows[0]["MiddleName"].ToString(),
+                            Email = dt.Rows[0]["Email"].ToString(),
+                            Phone = dt.Rows[0]["Phone"].ToString(),
+                            Address = dt.Rows[0]["Address"].ToString(),
+                            Username = dt.Rows[0]["Username"].ToString()
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error Query: {ex.Message}");
+                }
+            }
+            return loggedInUser;
+        }
     }
 }

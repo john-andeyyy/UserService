@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Model.Manager;
 using UserService.Models.Manager;
 using UserService.Models.Request;
@@ -7,6 +8,8 @@ namespace UserService.Controllers
 {
     [Route("api/TodoService/")]
     [ApiController]
+    [Authorize(Policy = "AuthPolicy")]
+
     public class Todo_ServiceController : Controller
     {
 
