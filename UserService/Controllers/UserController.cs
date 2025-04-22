@@ -13,6 +13,13 @@ namespace UserService.Controllers
 
     public class UserController : ControllerBase
     {
+        private readonly JwtSettings jwtSettings;
+        public UserController(JwtSettings jwtSettings)
+        {
+            this.jwtSettings = jwtSettings;
+        }
+
+
         #region Allowing Anonymous 
         [AllowAnonymous]
         [HttpPost("UserLogin")]
@@ -26,8 +33,6 @@ namespace UserService.Controllers
             }
             var tokenExpiration = TimeSpan.FromSeconds(jwtSettings.ExpirationSeconds);
             string token = JwtHelpers.CreateAccessToken(jwtSettings, user.Username, tokenExpiration);
-
-
 
             return Ok(new { Message = "User logged in successfully", Data = token });
         }
@@ -70,15 +75,6 @@ namespace UserService.Controllers
                 return NotFound(new { Message = "User not found" });
             }
             return Ok(new { Message = "User found", Data = user });
-        }
-
-      
-
-
-        private readonly JwtSettings jwtSettings;
-        public UserController(JwtSettings jwtSettings)
-        {
-            this.jwtSettings = jwtSettings;
         }
 
       

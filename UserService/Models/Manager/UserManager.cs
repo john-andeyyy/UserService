@@ -295,6 +295,7 @@ namespace Model.Manager
                         };
                     }
                 }
+
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error Query: {ex.Message}");
