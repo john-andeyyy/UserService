@@ -55,6 +55,14 @@ namespace UserService
             services.AddHttpContextAccessor();
             services.AddControllers();
 
+
+            string JWT_SECRET_KEY = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "NOT_FOUND";
+            if (string.IsNullOrEmpty(JWT_SECRET_KEY))
+                Console.WriteLine("[DEBUG] JWT_SECRET_KEY is MISSING.");
+            else
+                Console.WriteLine("[DEBUG] JWT_SECRET_KEY is PRESENT.");
+
+                
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -65,7 +73,9 @@ namespace UserService
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SIGNING_KEY"))),
+                        // IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY"))),
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey)),
+
                         ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
                         ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                     };

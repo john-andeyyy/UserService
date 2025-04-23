@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Model.Manager;
 using UserService.Helper;
@@ -8,6 +9,8 @@ namespace UserService.Controllers
 {
     [Route("api/jwt/")]
     [ApiController]
+    [Authorize(Policy = "AuthPolicy")]
+
     public class JWTEncryptionController : Controller
     {
         private readonly JwtSettings jwtSettings;
@@ -16,6 +19,7 @@ namespace UserService.Controllers
             this.jwtSettings = jwtSettings;
         }
 
+        [AllowAnonymous]
         [HttpGet("UserEncrypt/{Id}")]
         public IActionResult GetUserById([FromRoute] int Id)
         {
