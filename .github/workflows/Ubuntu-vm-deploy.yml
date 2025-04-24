@@ -25,7 +25,7 @@ jobs:
           debug: true
           script: |
             # Navigate to your project directory
-            cd /home/${{ secrets.VM_HOST }}/Desktop/UserService && \
+            cd /home/vboxuser/Desktop/UserService && \
             # Pull latest changes from the repository
             git pull origin main && \
             # Clean, build, and run the .NET application
