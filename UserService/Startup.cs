@@ -64,6 +64,14 @@ namespace UserService
                 Console.WriteLine("[DEBUG] JWT_SECRET_KEY is PRESENT.");
 
 
+            // For testing only
+            if (JWT_SECRET_KEY == "NOT_FOUND")
+            {
+                Console.WriteLine("[DEBUG] JWT_SECRET_KEY is MISSING.");
+                JWT_SECRET_KEY = Environment.GetEnvironmentVariable("SIGNING_KEY");
+            }
+
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -97,9 +105,7 @@ namespace UserService
                             string Username = claims.First(x => x.Type == "Username").Value;
                             var manager = new UserManager();
                             var isvalid = manager.GetUserByUsername(Username);
-
-
-
+                            
                             if (!String.IsNullOrEmpty(isvalid?.Username)) { return true; } else { return false; }
                         }
                         catch (Exception ex)

@@ -1,0 +1,30 @@
+name: Basic Deploy to Ubuntu VM
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Connect to VM and update code
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.VM_USER }}/Desktop/UserService && \
+            git pull origin main && \
+
+            # Clean, build, and run the .NET app
+            dotnet clean && \
+            dotnet build --configuration Release && \
+            dotnet run
