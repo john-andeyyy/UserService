@@ -1,8 +1,8 @@
-name: Test SSH Deploy
+name: Deploy to Ubuntu VM
 
 on:
   push:
-   branches:
+    branches:
       - main
       - master
 
@@ -11,13 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Test SSH Connection
-      run: |
-        ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "hostname && whoami && uptime"
+      - name: Deploy to Ubuntu
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          timeout: 30s
+          debug: true
+          script: |
+            # Navigate to your project directory
+            cd /home/${{ secrets.VM_USER }}/Desktop/UserService && \
+            # Pull latest changes from the repository
+            git pull origin main && \
+            # Clean, build, and run the .NET application
+            dotnet clean && \
+            dotnet build --configuration Release && \
+            dotnet run
