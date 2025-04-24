@@ -29,4 +29,5 @@ jobs:
             # Clean, build, and run the .NET application
             dotnet clean && \
             dotnet build --configuration Release && \
+            cd UserService && \
             dotnet run
