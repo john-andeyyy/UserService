@@ -1,0 +1,30 @@
+name: Auto Deploy to Ubuntu VM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies and build
+        run: |
+          cd ~/Desktop/UserService/UserService
+          dotnet restore
+          dotnet build --no-restore
+
+      - name: Run app
+        run: |
+          cd ~/Desktop/UserService/UserService
+          dotnet run
