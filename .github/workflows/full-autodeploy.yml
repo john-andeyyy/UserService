@@ -33,16 +33,18 @@ jobs:
             KillSignal=SIGINT
             SyslogIdentifier=userservice
             User=vboxuser
-            Environment=ASPNETCORE_ENVIRONMENT=Production
-            Environment=JWT_SECRET_KEY=64A63153-11C1-4919
-            Environment=JWT_ISSUER=https://localhost:5001
-            Environment=JWT_AUDIENCE=https://localhost:5001
+            Environment=ASPNETCORE_ENVIRONMENT=Development
+            Environment=HOST=localhost
+            Environment=PORT=5001
+            Environment=DB_PORT=3306
             Environment=DB_HOST=localhost
             Environment=DB_NAME=UserService
             Environment=DB_USER=root
             Environment=DB_PASS=Andrei_123!
             Environment=EXPIRATION_SECONDS=3600
-            Environment=SIGNING_KEY=Andrei
+            Environment=SIGNING_KEY=64A63153-11C1-4919-9133-EFAF99A9B456
+            Environment=JWT_ISSUER=https://localhost:5001
+            Environment=JWT_AUDIENCE=https://localhost:5001
 
             [Install]
             WantedBy=multi-user.target
@@ -51,7 +53,6 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl enable userservice
             sudo systemctl start userservice
-
 
       - name: Stop the UserService service (if running)
         run: |
@@ -68,4 +69,4 @@ jobs:
           sudo systemctl restart userservice.service
 
       - name: Mark build and deployment as completed
-        run: echo "✅ Build and deployment completed successfully!"
+        run: echo " Build and deployment completed successfully!"
