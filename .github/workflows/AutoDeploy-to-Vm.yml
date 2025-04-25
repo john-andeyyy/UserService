@@ -3,7 +3,7 @@ name: Auto Deploy to Ubuntu VM
 on:
   push:
     branches:
-      - master
+      - master-sdasd
 
 jobs:
   deploy:

@@ -20,7 +20,7 @@ jobs:
 
       - name: (Re)create systemd service file
         run: |
-          sudo bash -c 'cat <<EOF > /etc/systemd/system/userservice.service
+            sudo bash -c 'cat <<EOF > /etc/systemd/system/userservice.service
             [Unit]
             Description=User Service .NET App
             After=network.target
@@ -48,9 +48,10 @@ jobs:
             WantedBy=multi-user.target
             EOF'
 
+            sudo systemctl daemon-reload
+            sudo systemctl enable userservice
+            sudo systemctl start userservice
 
-          sudo systemctl daemon-reload
-          sudo systemctl enable userservice
 
       - name: Stop the UserService service (if running)
         run: |
