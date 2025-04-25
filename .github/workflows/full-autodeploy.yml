@@ -26,13 +26,13 @@ jobs:
             After=network.target
 
             [Service]
-            WorkingDirectory=/home/ubuntu/Desktop/UserService
-            ExecStart=/usr/bin/dotnet /home/ubuntu/Desktop/UserService/UserService.dll
+            WorkingDirectory=/home/vboxuser/Desktop/UserService
+            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService.dll
             Restart=always
             RestartSec=5
             KillSignal=SIGINT
             SyslogIdentifier=userservice
-            User=ubuntu
+            User=vboxuser
             Environment=ASPNETCORE_ENVIRONMENT=Production
             Environment=JWT_SECRET_KEY=64A63153-11C1-4919-9133-EFAF99A9B456
             Environment=JWT_ISSUER=https://localhost:5001
