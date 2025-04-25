@@ -17,6 +17,7 @@ jobs:
         run: |
           cd ~/Desktop/UserService/UserService
           git pull origin master
+          sudo systemctl stop userservice.service
           dotnet restore
           dotnet build
           # Restart the service
