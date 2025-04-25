@@ -27,7 +27,7 @@ jobs:
 
             [Service]
             WorkingDirectory=/home/vboxuser/Desktop/UserService
-            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService.dll
+            xecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService/bin/Debug/net6.0/UserService.dll
             Restart=always
             RestartSec=5
             KillSignal=SIGINT
