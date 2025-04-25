@@ -2,11 +2,12 @@ name: Test Self-Hosted Runner
 
 on:
   push:
-    branches: [master]
+    branches: [master] 
 
 jobs:
   test:
     runs-on: self-hosted 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -14,6 +15,10 @@ jobs:
       - name: Run a command on Ubuntu VM
         run: |
           echo "Hello from my Ubuntu VM self-hosted runner!"
+          cd ~/Downloads
+          git clone https://github.com/john-andeyyy/UserService.git
+          # Optional: Check if the repository was cloned successfully
+          ls -l ~/Downloads/UserService
 
       - name: Verify Ubuntu Version
         run: |
