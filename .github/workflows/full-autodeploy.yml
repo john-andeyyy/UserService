@@ -34,7 +34,7 @@ jobs:
             SyslogIdentifier=userservice
             User=vboxuser
             Environment=ASPNETCORE_ENVIRONMENT=Production
-            Environment=JWT_SECRET_KEY=64A63153-11C1-4919-9133-EFAF99A9B456
+            Environment=JWT_SECRET_KEY=64A63153-11C1-4919
             Environment=JWT_ISSUER=https://localhost:5001
             Environment=JWT_AUDIENCE=https://localhost:5001
             Environment=DB_HOST=localhost
