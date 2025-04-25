@@ -2,15 +2,14 @@ name: Test Self-Hosted Runner
 
 on:
   push:
-    branches: [master] 
+    branches: [master]  
 
 jobs:
   test:
     runs-on: self-hosted 
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  
 
       - name: Run a command on Ubuntu VM
         run: |
@@ -22,4 +21,4 @@ jobs:
 
       - name: Verify Ubuntu Version
         run: |
-          echo "Ubuntu Version: $(lsb_release -a)"
+          lsb_release -a  # No need for echo, this command already outputs version details
