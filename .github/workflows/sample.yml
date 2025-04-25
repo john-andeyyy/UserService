@@ -1,0 +1,20 @@
+name: Test Self-Hosted Runner
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: self-hosted 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run a command on Ubuntu VM
+        run: |
+          echo "Hello from my Ubuntu VM self-hosted runner!"
+
+      - name: Verify Ubuntu Version
+        run: |
+          echo "Ubuntu Version: $(lsb_release -a)"
