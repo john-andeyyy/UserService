@@ -2,7 +2,7 @@ name: Test Self-Hosted Runner
 
 on:
   push:
-    branches: [master]  
+    # branches: [master]  
 
 jobs:
   test:
