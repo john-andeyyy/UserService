@@ -9,7 +9,7 @@ namespace UserService.Controllers
 {
     [Route("api/UserService/")]
     [ApiController]
-    [Authorize(Policy = "AuthPolicy")]
+    // [Authorize(Policy = "AuthPolicy")]
 
     public class UserController : ControllerBase
     {
