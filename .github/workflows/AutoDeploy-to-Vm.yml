@@ -10,18 +10,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout source code
+      - name: Checkout the source code
         uses: actions/checkout@v3
 
-      - name: Restore dependencies and build
+      - name: Pull the latest changes from the master branch
         run: |
           cd ~/Desktop/UserService/UserService
           git pull origin master
+
+      - name: Stop the UserService service
+        run: |
           sudo systemctl stop userservice.service
+
+      - name: Restore dependencies and build the project
+        run: |
           dotnet restore
           dotnet build
-          # Restart the service
-          sudo systemctl restart userservice.service
-      - name:  Mark build complete
-        run: echo "Build and deployment completed successfully!"
 
+      - name: Restart the UserService service
+        run: |
+          sudo systemctl restart userservice.service
+
+      - name: Mark build and deployment as completed
+        run: echo "Build and deployment completed successfully!"
