@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - master
+      # - master
 
 jobs:
   GetSecret-job:
@@ -26,6 +26,6 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Run app
-        run: dotnet run --project UserService/UserService.csproj
+      # - name: Run app
+      #   run: dotnet run --project UserService/UserService.csproj
 

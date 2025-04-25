@@ -24,7 +24,7 @@ jobs:
           dotnet restore
           dotnet build --no-restore
 
-      - name: Run app
-        run: |
-          cd ~/Desktop/UserService/UserService
-          dotnet run
+      # - name: Run app
+      #   run: |
+      #     cd ~/Desktop/UserService/UserService
+      #     dotnet run
