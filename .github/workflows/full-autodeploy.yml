@@ -15,34 +15,34 @@ jobs:
 
       - name: Delete UserService folder and clone the repository
         run: |
-          rm -rf ~/Desktop/UserService
-          git clone https://github.com/john-andeyyy/UserService.git ~/Desktop/UserService
+          rm -rf ~/Desktop/${{vars.SERVICE_NAME}}
+          git clone https://github.com/john-andeyyy/UserService.git ~/Desktop/${{vars.SERVICE_NAME}}
 
       - name: (Re)create systemd service file
         run: |
-            sudo bash -c 'cat <<EOF > /etc/systemd/system/userservice.service
+            sudo bash -c 'cat <<EOF > /etc/systemd/system/${{vars.SERVICE_NAME}}.service
             [Unit]
             Description=User Service .NET App
             After=network.target
 
             [Service]
-            WorkingDirectory=/home/vboxuser/Desktop/UserService
-            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService/bin/Debug/net6.0/UserService.dll
+            WorkingDirectory=/home/vboxuser/Desktop/${{vars.SERVICE_NAME}}
+            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{vars.SERVICE_NAME}}/${{vars.SERVICE_NAME}}/bin/Debug/net6.0/${{vars.SERVICE_NAME}}.dll
             Restart=always
             RestartSec=5
             KillSignal=SIGINT
-            SyslogIdentifier=userservice
+            SyslogIdentifier=${{vars.SERVICE_NAME}}
             User=vboxuser
             Environment=ASPNETCORE_ENVIRONMENT=Development
             Environment=HOST=localhost
             Environment=PORT=5001
             Environment=DB_PORT=3306
             Environment=DB_HOST=localhost
-            Environment=DB_NAME=UserService
-            Environment=DB_USER=root
-            Environment=DB_PASS=Andrei_123!
+            Environment=DB_NAME=${{secrets.DB_NAME}}
+            Environment=DB_USER=${{secrets.DB_USER}}
+            Environment=DB_PASS=${{secrets.DB_PASS}}
             Environment=EXPIRATION_SECONDS=3600
-            Environment=SIGNING_KEY=64A63153-11C1-4919-9133-EFAF99A9B456
+            Environment=SIGNING_KEY=${{secrets.SIGNING_KEY}}
             Environment=JWT_ISSUER=https://localhost:5001
             Environment=JWT_AUDIENCE=https://localhost:5001
 
