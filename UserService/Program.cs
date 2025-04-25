@@ -14,8 +14,8 @@ namespace konnect_player_info
 
         public static IWebHostBuilder CreateHostBuilder(string[] args)
         {
-            var HOST = Environment.GetEnvironmentVariable("HOST") ?? "localhost";
-            var PORT = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+            var HOST = Environment.GetEnvironmentVariable("HOST");
+            var PORT = Environment.GetEnvironmentVariable("PORT");
 
             return WebHost.CreateDefaultBuilder(args)
                 .UseUrls($"http://{HOST}:{PORT}")

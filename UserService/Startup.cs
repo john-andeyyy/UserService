@@ -74,7 +74,8 @@ namespace UserService
                 }
             }
 
-            
+            System.Console.WriteLine("JWT_SECRET_KEY" + JWT_SECRET_KEY);
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -108,7 +109,7 @@ namespace UserService
                             string Username = claims.First(x => x.Type == "Username").Value;
                             var manager = new UserManager();
                             var isvalid = manager.GetUserByUsername(Username);
-                            
+
                             if (!String.IsNullOrEmpty(isvalid?.Username)) { return true; } else { return false; }
                         }
                         catch (Exception ex)
