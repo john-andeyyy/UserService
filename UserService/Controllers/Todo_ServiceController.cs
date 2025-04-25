@@ -8,7 +8,7 @@ namespace UserService.Controllers
 {
     [Route("api/TodoService/")]
     [ApiController]
-    [Authorize(Policy = "AuthPolicy")]
+    // [Authorize(Policy = "AuthPolicy")]
 
     public class Todo_ServiceController : Controller
     {
