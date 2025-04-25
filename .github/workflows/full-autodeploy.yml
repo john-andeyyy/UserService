@@ -45,6 +45,9 @@ jobs:
             Environment=SIGNING_KEY=${{secrets.SIGNING_KEY}}
             Environment=JWT_ISSUER=https://localhost:5001
             Environment=JWT_AUDIENCE=https://localhost:5001
+            Environment=JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
+
+            
 
             [Install]
             WantedBy=multi-user.target
