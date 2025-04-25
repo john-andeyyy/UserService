@@ -34,8 +34,8 @@ jobs:
             SyslogIdentifier=${{vars.SERVICE_NAME}}
             User=vboxuser
             Environment=ASPNETCORE_ENVIRONMENT=Development
-            Environment=HOST=localhost
-            Environment=PORT=5001
+            Environment=HOST=${{secrets.HOST}}
+            Environment=PORT=${{secrets.PORT}}
             Environment=DB_PORT=3306
             Environment=DB_HOST=localhost
             Environment=DB_NAME=${{secrets.DB_NAME}}
