@@ -22,3 +22,6 @@ jobs:
           dotnet build
           # Restart the service
           sudo systemctl restart userservice.service
+      - name:  Mark build complete
+        run: echo "Build and deployment completed successfully!"
+
