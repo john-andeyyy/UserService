@@ -63,7 +63,7 @@ jobs:
 
       - name: Stop the UserService service (if running)
         run: |
-          sudo systemctl stop ${ secrets.SERVICE_NAME }.service || true  # Stop if already running
+          sudo systemctl stop ${{ secrets.SERVICE_NAME }}.service || true  # Stop if already running
 
       - name: Restore dependencies and build the project
         run: |
