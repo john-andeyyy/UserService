@@ -28,7 +28,7 @@
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
             "HOST": "localhost",
-            "PORT": "5001",
+            "PORT": "5011",
             "DB_PORT": "3306",
             "DB_HOST": "localhost",
             "DB_NAME": "UserService",

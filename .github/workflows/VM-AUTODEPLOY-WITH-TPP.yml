@@ -1,4 +1,4 @@
-# vboxuser@Ubuntu:~/actions-userrunner$ ./run.sh
+# vboxuser@Ubuntu:~/actions-UseServicerunner$ ./run.sh
 
 name: Auto Deploy to Ubuntu VM WITH TPP
 
