@@ -18,7 +18,7 @@ jobs:
       - name: Delete UserService folder and clone the repository
         run: |
           rm -rf ~/Desktop/${{vars.SERVICE_NAME}}
-          git clone https://github.com/john-andeyyy/UserService.git ~/Desktop/${{vars.SERVICE_NAME}}
+          git clone --branch WITH-TPP https://github.com/john-andeyyy/UserService.git ~/Desktop/${{vars.SERVICE_NAME}}
 
       - name: (Re)create systemd service file
         run: |
