@@ -170,7 +170,7 @@ namespace UserService
                 endpoints.MapControllers();
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Welcome to User Service!. s");
+                    await context.Response.WriteAsync("Welcome to User Service!.. ");
                 });
             });
         }
