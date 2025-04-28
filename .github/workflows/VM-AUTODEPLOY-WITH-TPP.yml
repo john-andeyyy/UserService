@@ -49,10 +49,11 @@ jobs:
             Environment=JWT_AUDIENCE=https://localhost:5001
             Environment=JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
 
+
             # TPP CONFIG
             Environment=TPP_URL=${{secrets.TPP_URL}}
-            Environment=JWT_SECRET_KEY=${{secrets.TPP_Username}}
-            Environment=JWT_SECRET_KEY=${{secrets.TPP_Password}}
+            Environment=TPP_Username=${{secrets.TPP_Username}}
+            Environment=TPP_Password=${{secrets.TPP_Password}}
 
             
 
