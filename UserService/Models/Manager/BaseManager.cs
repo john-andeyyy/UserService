@@ -19,7 +19,7 @@ namespace Model.Manager
 
         private string TPP_Username = "USER1";
         private string TPP_Password = "USER1";
-        private string TPP_URL = "http://localhost:5000/v2/";
+        private string TPP_URL = "http://localhost:5050/v2/";
 
 
         #region 3rd Party
