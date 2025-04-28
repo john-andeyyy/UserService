@@ -64,22 +64,22 @@ jobs:
             EOF'
 
             sudo systemctl daemon-reload
-            sudo systemctl enable userservice
-            sudo systemctl start userservice
+            sudo systemctl enable UserService
+            sudo systemctl start UserService
 
       - name: Stop the UserService service (if running)
         run: |
-          sudo systemctl stopUserService.service || true  # Stop if already running
+          sudo systemctl stop UserService.service || true  # Stop if already running
 
       - name: Restore dependencies and build the project
         run: |
-          cd /home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}/UserService
+          cd /home/vboxuser/Desktop/UserService/UserService
           dotnet restore
           dotnet build
 
       - name: Restart the UserService service
         run: |
-          sudo systemctl restartUserService.service
+          sudo systemctl restart UserService.service
 
       - name: Mark build and deployment as completed
         run: echo " Build and deployment completed successfully!"
