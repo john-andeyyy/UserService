@@ -49,6 +49,8 @@ jobs:
             Environment=JWT_AUDIENCE=https://localhost:5001
             Environment=JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
 
+            Environment=sample="asd"
+
 
             # TPP CONFIG
             Environment=TPP_URL=${{secrets.TPP_URL}}

@@ -57,22 +57,12 @@ namespace UserService
 
 
 
-            string JWT_SECRET_KEY = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "NOT_FOUND";
+            string JWT_SECRET_KEY = Environment.GetEnvironmentVariable("SIGNING_KEY") ?? "NOT_FOUND";
             if (JWT_SECRET_KEY == "NOT_FOUND")
                 Console.WriteLine("1 [DEBUG] JWT_SECRET_KEY is MISSING.");
             else
                 Console.WriteLine("[DEBUG] JWT_SECRET_KEY is PRESENT.");
 
-
-            // For testing only
-            if (JWT_SECRET_KEY == "NOT_FOUND")
-            {
-                JWT_SECRET_KEY = Environment.GetEnvironmentVariable("SIGNING_KEY") ?? "NOT_FOUND";
-                if (JWT_SECRET_KEY == "NOT_FOUND")
-                {
-                    Console.WriteLine("2 [DEBUG] JWT_SECRET_KEY is MISSING.");
-                }
-            }
 
             System.Console.WriteLine("JWT_SECRET_KEY" + JWT_SECRET_KEY);
 
