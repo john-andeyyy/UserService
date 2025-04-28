@@ -24,45 +24,42 @@ jobs:
 
       - name: (Re)create systemd service file
         run: |
-            sudo bash -c 'cat <<EOF > /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
-            [Unit]
-            Description=User Service .NET App
-            After=network.target
+          sudo bash -c 'cat <<EOF > /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
+          [Unit]
+          Description=User Service .NET App
+          After=network.target
 
-            [Service]
-            WorkingDirectory=/home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}
-            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService/bin/Debug/net6.0/UserService.dll
-            Restart=always
-            RestartSec=5
-            KillSignal=SIGINT
-            SyslogIdentifier=${{ secrets.SERVICE_NAME }}
-            User=vboxuser
-            Environment=ASPNETCORE_ENVIRONMENT=Development
-            Environment=HOST=${{ secrets.HOST }}
-            Environment=PORT=${{ secrets.PORT }}
-            Environment=DB_PORT=3306
-            Environment=DB_HOST=localhost
-            Environment=DB_NAME=${{ secrets.DB_NAME }}
-            Environment=DB_USER=${{ secrets.DB_USER }}
-            Environment=DB_PASS=${{ secrets.DB_PASS }}
-            Environment=EXPIRATION_SECONDS=3600
-            Environment=SIGNING_KEY=${{ secrets.SIGNING_KEY }}
-            Environment=JWT_ISSUER=https://localhost:5001
-            Environment=JWT_AUDIENCE=https://localhost:5001
-            Environment=JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          [Service]
+          WorkingDirectory=/home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}
 
-            # TPP CONFIG
-            Environment=TPP_URL=${{ secrets.TPP_URL }}
-            Environment=TPP_Username=${{ secrets.TPP_Username }}
-            Environment=TPP_Password=${{ secrets.TPP_Password }}
+          ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}/bin/Debug/net6.0/${{ secrets.SERVICE_NAME }}.dll
+          Restart=always
+          RestartSec=5
+          KillSignal=SIGINT
+          SyslogIdentifier=${{ secrets.SERVICE_NAME }}
+          User=vboxuser
+          Environment=ASPNETCORE_ENVIRONMENT=Development
+          Environment=HOST=${{ secrets.HOST }}
+          Environment=PORT=${{ secrets.PORT }}
+          Environment=DB_PORT=3306
+          Environment=DB_HOST=localhost
+          Environment=DB_NAME=${{ secrets.DB_NAME }}
+          Environment=DB_USER=${{ secrets.DB_USER }}
+          Environment=DB_PASS=${{ secrets.DB_PASS }}
+          Environment=EXPIRATION_SECONDS=3600
+          Environment=SIGNING_KEY=${{ secrets.SIGNING_KEY }}
+          Environment=JWT_ISSUER=https://localhost:5001
+          Environment=JWT_AUDIENCE=https://localhost:5001
+          Environment=JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
 
+     
             [Install]
             WantedBy=multi-user.target
             EOF'
 
             sudo systemctl daemon-reload
-            sudo systemctl enable /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
-            sudo systemctl start /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
+            sudo systemctl enable userservice
+            sudo systemctl start userservice
 
       - name: Stop the UserService service (if running)
         run: |
