@@ -26,23 +26,23 @@ jobs:
 
       - name: Delete old systemd service file (if exists)
         run: |
-          sudo rm -f /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
+          sudo rm -f /etc/systemd/system/UserService.service
 
       - name: (Re)create systemd service file
         run: |
-          sudo bash -c 'cat <<EOF > /etc/systemd/system/${{ secrets.SERVICE_NAME }}.service
+          sudo bash -c 'cat <<EOF > /etc/systemd/system/UserService.service
           [Unit]
           Description=User Service .NET App
           After=network.target
 
           [Service]
-          WorkingDirectory=/home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}
-
-          ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}/bin/Debug/net6.0/${{ secrets.SERVICE_NAME }}.dll
+          WorkingDirectory=/home/vboxuser/Desktop/UserService
+          # cat /etc/systemd/system/UserService.service
+          ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService/bin/Debug/net6.0/UserService.dll
           Restart=always
           RestartSec=5
           KillSignal=SIGINT
-          SyslogIdentifier=${{ secrets.SERVICE_NAME }}
+          SyslogIdentifier=UserService
           User=vboxuser
           Environment=ASPNETCORE_ENVIRONMENT=Development
           Environment=HOST=${{ secrets.HOST }}
@@ -69,7 +69,7 @@ jobs:
 
       - name: Stop the UserService service (if running)
         run: |
-          sudo systemctl stop ${{ secrets.SERVICE_NAME }}.service || true  # Stop if already running
+          sudo systemctl stopUserService.service || true  # Stop if already running
 
       - name: Restore dependencies and build the project
         run: |
@@ -79,7 +79,7 @@ jobs:
 
       - name: Restart the UserService service
         run: |
-          sudo systemctl restart ${{ secrets.SERVICE_NAME }}.service
+          sudo systemctl restartUserService.service
 
       - name: Mark build and deployment as completed
         run: echo " Build and deployment completed successfully!"
