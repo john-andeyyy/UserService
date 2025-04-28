@@ -20,13 +20,14 @@ jobs:
 
       - name: (Re)create systemd service file
         run: |
-            sudo bash -c 'cat <<EOF > /etc/systemd/system/${{vars.SERVICE_NAME}}.service
+            sudo bash -c 'cat <<EOF > /etc/systemd/system/UserService.service
             [Unit]
             Description=User Service .NET App
             After=network.target
 
             [Service]
             WorkingDirectory=/home/vboxuser/Desktop/${{vars.SERVICE_NAME}}
+
             ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{vars.SERVICE_NAME}}/${{vars.SERVICE_NAME}}/bin/Debug/net6.0/${{vars.SERVICE_NAME}}.dll
             Restart=always
             RestartSec=5
