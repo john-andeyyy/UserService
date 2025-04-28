@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v3
+      
+      - name: sample
+        run: echo "sample"
+  
 
       - name: Delete old UserService folder and clone the repository
         run: |
