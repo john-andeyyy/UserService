@@ -1,6 +1,4 @@
-# cd actions-1runner 
-# ./run.sh
-name: Auto Deploy to Ubuntu VM WITH TPP...
+name: Auto Deploy to Ubuntu VM WITH TPP
 
 on:
   push:
@@ -15,21 +13,25 @@ jobs:
       - name: Checkout the source code
         uses: actions/checkout@v3
 
-      - name: Delete UserService folder and clone the repository
+      - name: Delete old UserService folder and clone the repository
         run: |
           rm -rf ~/Desktop/${{vars.SERVICE_NAME}}
           git clone --branch WITH-TPP https://github.com/john-andeyyy/UserService.git ~/Desktop/${{vars.SERVICE_NAME}}
 
+      - name: Delete old systemd service file (if exists)
+        run: |
+          sudo rm -f /etc/systemd/system/${{vars.SERVICE_NAME}}.service
+
       - name: (Re)create systemd service file
         run: |
-            sudo bash -c 'cat <<EOF > /etc/systemd/system/UserService.service
+            sudo bash -c 'cat <<EOF > /etc/systemd/system/${{vars.SERVICE_NAME}}.service
             [Unit]
             Description=User Service .NET App
             After=network.target
 
             [Service]
             WorkingDirectory=/home/vboxuser/Desktop/${{vars.SERVICE_NAME}}
-            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/UserService/UserService/bin/Debug/net6.0/UserService.dll
+            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{vars.SERVICE_NAME}}/UserService/bin/Debug/net6.0/UserService.dll
             Restart=always
             RestartSec=5
             KillSignal=SIGINT
@@ -49,37 +51,32 @@ jobs:
             Environment=JWT_AUDIENCE=https://localhost:5001
             Environment=JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
 
-            Environment=sample="asd"
-
-
             # TPP CONFIG
             Environment=TPP_URL=${{secrets.TPP_URL}}
             Environment=TPP_Username=${{secrets.TPP_Username}}
             Environment=TPP_Password=${{secrets.TPP_Password}}
-
-            
 
             [Install]
             WantedBy=multi-user.target
             EOF'
 
             sudo systemctl daemon-reload
-            sudo systemctl enable userservice
-            sudo systemctl start userservice
+            sudo systemctl enable ${vars.SERVICE_NAME}.service
+            sudo systemctl start ${vars.SERVICE_NAME}.service
 
       - name: Stop the UserService service (if running)
         run: |
-          sudo systemctl stop userservice.service || true  # Stop if already running
+          sudo systemctl stop ${vars.SERVICE_NAME}.service || true  # Stop if already running
 
       - name: Restore dependencies and build the project
         run: |
-          cd ~/Desktop/UserService/UserService
+          cd ~/Desktop/${{vars.SERVICE_NAME}}/UserService
           dotnet restore
           dotnet build
 
       - name: Restart the UserService service
         run: |
-          sudo systemctl restart userservice.service
+          sudo systemctl restart ${vars.SERVICE_NAME}.service
 
       - name: Mark build and deployment as completed
         run: echo " Build and deployment completed successfully!"
