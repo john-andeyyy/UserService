@@ -1,22 +1,24 @@
 ﻿namespace UserService.Models.Response
 {
-    public class ThirdParty
+    public class ApiResponse
     {
-        public string Party_Id { get; set; }
-        public string Party_API_ENDPOINT { get; set; }
-        public string Party_API_NAME { get; set; }
-        public string Party_METHOD { get; set; }
-        public string Party_CODE { get; set; }
+        public string Message { get; set; }
+        public List<ApiData> Data { get; set; }
+    }
 
-        // new Properties based on TPP
+    public class ApiData
+    {
         public string CredentialId { get; set; }
         public string ProviderId { get; set; }
         public string ProviderName { get; set; }
         public string ProviderTypeId { get; set; }
         public string ProviderTypeName { get; set; }
         public string ProgramId { get; set; }
+        public string Endpoint { get; set; }
         public string Description { get; set; }
+        public string Method { get; set; }
         public string Action { get; set; }
         public string Service { get; set; }
     }
+
 }

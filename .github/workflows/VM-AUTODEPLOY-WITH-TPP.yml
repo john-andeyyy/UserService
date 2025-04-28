@@ -1,0 +1,80 @@
+name: Auto Deploy to Ubuntu VM WITH TPP
+
+on:
+  push:
+    branches:
+      - WITH-TPP
+
+jobs:
+  deploy-with-tpp:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v3
+
+      - name: Delete UserService folder and clone the repository
+        run: |
+          rm -rf ~/Desktop/${{vars.SERVICE_NAME}}
+          git clone https://github.com/john-andeyyy/UserService.git ~/Desktop/${{vars.SERVICE_NAME}}
+
+      - name: (Re)create systemd service file
+        run: |
+            sudo bash -c 'cat <<EOF > /etc/systemd/system/${{vars.SERVICE_NAME}}.service
+            [Unit]
+            Description=User Service .NET App
+            After=network.target
+
+            [Service]
+            WorkingDirectory=/home/vboxuser/Desktop/${{vars.SERVICE_NAME}}
+            ExecStart=/usr/bin/dotnet /home/vboxuser/Desktop/${{vars.SERVICE_NAME}}/${{vars.SERVICE_NAME}}/bin/Debug/net6.0/${{vars.SERVICE_NAME}}.dll
+            Restart=always
+            RestartSec=5
+            KillSignal=SIGINT
+            SyslogIdentifier=${{vars.SERVICE_NAME}}
+            User=vboxuser
+            Environment=ASPNETCORE_ENVIRONMENT=Development
+            Environment=HOST=${{secrets.HOST}}
+            Environment=PORT=${{secrets.PORT}}
+            Environment=DB_PORT=3306
+            Environment=DB_HOST=localhost
+            Environment=DB_NAME=${{secrets.DB_NAME}}
+            Environment=DB_USER=${{secrets.DB_USER}}
+            Environment=DB_PASS=${{secrets.DB_PASS}}
+            Environment=EXPIRATION_SECONDS=3600
+            Environment=SIGNING_KEY=${{secrets.SIGNING_KEY}}
+            Environment=JWT_ISSUER=https://localhost:5001
+            Environment=JWT_AUDIENCE=https://localhost:5001
+            Environment=JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
+
+            # TPP CONFIG
+            Environment=TPP_URL=${{secrets.TPP_URL}}
+            Environment=JWT_SECRET_KEY=${{secrets.TPP_Username}}
+            Environment=JWT_SECRET_KEY=${{secrets.TPP_Password}}
+
+            
+
+            [Install]
+            WantedBy=multi-user.target
+            EOF'
+
+            sudo systemctl daemon-reload
+            sudo systemctl enable userservice
+            sudo systemctl start userservice
+
+      - name: Stop the UserService service (if running)
+        run: |
+          sudo systemctl stop userservice.service || true  # Stop if already running
+
+      - name: Restore dependencies and build the project
+        run: |
+          cd ~/Desktop/UserService/UserService
+          dotnet restore
+          dotnet build
+
+      - name: Restart the UserService service
+        run: |
+          sudo systemctl restart userservice.service
+
+      - name: Mark build and deployment as completed
+        run: echo " Build and deployment completed successfully!"

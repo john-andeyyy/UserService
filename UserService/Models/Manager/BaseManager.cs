@@ -12,9 +12,73 @@ namespace Model.Manager
         }
 
 
+        private string TPP_Username = Environment.GetEnvironmentVariable("TPP_Username"); // USER1
+        private string TPP_Password = Environment.GetEnvironmentVariable("TPP_Password"); // USER1
+        private string TPP_URL = Environment.GetEnvironmentVariable("TPP_URL"); // "http://localhost:5000/v2/";
+
 
         #region 3rd Party
-        public ThirdParty getThirdPartyEndPoint(string code)
+
+        public ApiResponse getThirdPartyEndPoint_TPP(int ID)
+        {
+            Console.WriteLine("Calling TPP");
+
+            // Initialize ApiResponse to return the data
+            ApiResponse apiResponse = new ApiResponse();
+
+            string username = this.TPP_Username;
+            string password = this.TPP_Password;
+
+            var url = $"{TPP_URL}credential/8/{ID}";
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            var authenticationString = $"{username}:{password}";
+            var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(authenticationString));
+            client.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
+
+            try
+            {
+                var response = client.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+
+                var responseStr = response.Content.ReadAsStringAsync().Result;
+                //Console.WriteLine("Response JSON: " + responseStr);
+
+                var options = new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(responseStr, options);
+
+                if (apiResponse != null && apiResponse.Data != null && apiResponse.Data.Count > 0)
+                {
+                    var firstItem = apiResponse.Data[0];
+
+                    // Optionally, you can print out or use the values in firstItem
+                    //Console.WriteLine("Endpoint: " + firstItem.Endpoint);
+                    //Console.WriteLine("Method: " + firstItem.Method);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                client.Dispose();
+            }
+
+            return apiResponse;
+        }
+
+
+
+
+
+        public ThirdParty getThirdPartyEndPointV1(string code)
         {
             ThirdParty api = new ThirdParty();
 
@@ -43,8 +107,6 @@ namespace Model.Manager
             return api;
 
         }
-
-
 
         #endregion
 

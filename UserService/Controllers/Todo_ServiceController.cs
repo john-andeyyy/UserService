@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Model.Manager;
 using UserService.Models.Manager;
 using UserService.Models.Request;
@@ -8,7 +7,7 @@ namespace UserService.Controllers
 {
     [Route("api/TodoService/")]
     [ApiController]
-    [Authorize(Policy = "AuthPolicy")]
+    //[Authorize(Policy = "AuthPolicy")]
 
     public class Todo_ServiceController : Controller
     {
@@ -24,11 +23,9 @@ namespace UserService.Controllers
             {
                 return NotFound("Invalid service request");
             }
-            var response = serviceManager.ApiUsingParams(service, UserId);
-
+            var response = serviceManager.ApiUsingParams(9, UserId);
 
             return Content(response, "application/json");
-
 
         }
 
@@ -37,12 +34,7 @@ namespace UserService.Controllers
         {
             ServiceManager serviceManager = new ServiceManager();
 
-            var service = serviceManager.GetServiceMethodDetails("TodoService", "DeleteTodo");
-            if (service == null)
-            {
-                return NotFound("Invalid service request");
-            }
-            var response = serviceManager.ApiUsingParams(service, Id);
+            var response = serviceManager.ApiUsingParams(13, Id);
 
 
             return Content(response, "application/json");
@@ -53,12 +45,7 @@ namespace UserService.Controllers
         {
             ServiceManager serviceManager = new ServiceManager();
 
-            var service = serviceManager.GetServiceMethodDetails("TodoService", "GetTodoById");
-            if (service == null)
-            {
-                return NotFound("Invalid service request");
-            }
-            var response = serviceManager.ApiUsingParams(service, Id);
+            var response = serviceManager.ApiUsingParams(12, Id);
 
 
             return Content(response, "application/json");
@@ -70,6 +57,7 @@ namespace UserService.Controllers
         [HttpPost("NewTodo")]
         public IActionResult NewTodo(NewTodo newTodo)
         {
+            Console.WriteLine("new todo");
             var manager = new UserManager();
             var IsExcisting = manager.GetUserById(newTodo.UserId);
             if (IsExcisting == null)
@@ -78,12 +66,13 @@ namespace UserService.Controllers
             }
 
             ServiceManager serviceManager = new ServiceManager();
-            var service = serviceManager.GetServiceMethodDetails("TodoService", "NewTodo");
-            if (service == null)
+            var response = serviceManager.SendDynamicApi(10, newTodo);
+
+            if (response.Contains("ERROR"))
             {
-                return NotFound("Invalid service request");
+
+                return BadRequest(new { message = response });
             }
-            var response = serviceManager.SendDynamicApi(service, newTodo);
 
             return Content(response, "application/json");
         }
@@ -92,13 +81,8 @@ namespace UserService.Controllers
         public IActionResult Update(UpdateTodo newTodo)
         {
             ServiceManager Manager = new ServiceManager();
-            var service = Manager.GetServiceMethodDetails("TodoService", "UpdateTodo");
-            if (service == null)
-            {
-                return NotFound("Invalid service request");
-            }
 
-            var Response = Manager.SendDynamicApi(service, newTodo);
+            var Response = Manager.SendDynamicApi(11, newTodo);
             return Content(Response, "application/json");
 
         }
@@ -108,12 +92,7 @@ namespace UserService.Controllers
         {
             ServiceManager serviceManager = new ServiceManager();
 
-            var service = serviceManager.GetServiceMethodDetails("TodoService", "MarkAsCompleted");
-            if (service == null)
-            {
-                return NotFound("Invalid service request");
-            }
-            var response = serviceManager.SendDynamicApi(service, Update);
+            var response = serviceManager.SendDynamicApi(14, Update);
 
             return Content(response, "application/json");
         }

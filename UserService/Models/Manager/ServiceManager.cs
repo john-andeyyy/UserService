@@ -36,37 +36,34 @@ namespace UserService.Models.Manager
             return api;
         }
 
-        public string SendDynamicApi(ThirdParty service, object request = null)
+        //public string SendDynamicApi(ThirdParty service, object request = null)
+        public string SendDynamicApi(int Credential_ID, object request = null)
         {
             var responseStr = "";
-            var tp = getThirdPartyEndPoint(service.Party_CODE);
+            var tp = getThirdPartyEndPoint_TPP(Credential_ID);
+
+            string ENDPOINT = tp.Data?.FirstOrDefault()?.Endpoint ?? "No endpoint available.";
+            //Console.WriteLine("Party_API_ENDPOINT: " + ENDPOINT);
+            string METHOD = tp.Data?.FirstOrDefault()?.Method ?? "No Method available.";
+            //Console.WriteLine("Party_API_METHOD: " + METHOD);
+
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
 
-            //var username = kod.Models.Tools.Crypt.Decrypt(tp.Clientid, Key);
-            //var password = kod.Models.Tools.Crypt.Decrypt(tp.ClientSecret, Key);
-            //var authenticationString = $"{username}:{password}";
-            //var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(authenticationString));
-
-            //client.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
-            //client.DefaultRequestHeaders.Add("ProgramKey", service.programKey);
-
             string requestStr = System.Text.Json.JsonSerializer.Serialize(request);
             var content = new StringContent(requestStr, Encoding.UTF8, "application/json");
 
-            // Optional: Deserialize if needed, but not always required
-            //var requestBody = JsonConvert.DeserializeObject<Dictionary<string, object>>(requestStr);
 
-            var url = service.Party_API_ENDPOINT;
+            //var url = service.Party_API_ENDPOINT; // from the prams
+            var url = ENDPOINT;
 
             HttpResponseMessage response;
-            //Console.WriteLine(" \n\n url: " + url + " \n\n");
             try
             {
                 // if GET DELETE ADD THE ID IN THE URL 
                 // GET, DELETE
-                switch (service.Party_METHOD.ToUpper())
+                switch (METHOD.ToUpper())
                 {
                     case "POST":
                         response = client.PostAsJsonAsync(url, request).Result;
@@ -84,21 +81,25 @@ namespace UserService.Models.Manager
 
                 response.EnsureSuccessStatusCode();
                 responseStr = response.Content.ReadAsStringAsync().Result;
-                var contentType = response.Content.Headers.GetValues("Content-Type").First();
+                if (response.Content.Headers.Contains("Content-Type"))
+                {
+                    var contentType = response.Content.Headers.GetValues("Content-Type").First();
+                }
             }
             catch (Exception ex)
             {
                 //APILog("", url, requestStr, ex.Message.ToString(), "");
                 Console.WriteLine(ex.Message.ToString());
+                responseStr = "ERROR: The Other Service maybe Offline please check!";
             }
 
             return responseStr;
         }
 
-        public string ApiUsingParams(ThirdParty service, int Id,object request = null)
+        public string ApiUsingParams(int Credential_ID, int Id, object request = null)
         {
             var responseStr = "";
-            var tp = getThirdPartyEndPoint(service.Party_CODE);
+            var tp = getThirdPartyEndPoint_TPP(Credential_ID);
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -106,17 +107,16 @@ namespace UserService.Models.Manager
             string requestStr = System.Text.Json.JsonSerializer.Serialize(request);
             var content = new StringContent(requestStr, Encoding.UTF8, "application/json");
 
+            string ENDPOINT = tp.Data?.FirstOrDefault()?.Endpoint ?? "No endpoint available.";
+            string METHOD = tp.Data?.FirstOrDefault()?.Method ?? "No Method available.";
 
-            var url = service.Party_API_ENDPOINT+Id;
+            var url = ENDPOINT + Id;
 
             HttpResponseMessage response;
-
-            //Console.WriteLine(" \n\n url: " + url + " \n\n");
             try
             {
-                // if GET DELETE ADD THE ID IN THE URL 
-                // GET, DELETE
-                switch (service.Party_METHOD.ToUpper())
+
+                switch (METHOD.ToUpper())
                 {
                     case "POST":
                         response = client.PostAsJsonAsync(url, request).Result;
@@ -134,7 +134,11 @@ namespace UserService.Models.Manager
 
                 response.EnsureSuccessStatusCode();
                 responseStr = response.Content.ReadAsStringAsync().Result;
-                var contentType = response.Content.Headers.GetValues("Content-Type").First();
+                if (response.Content.Headers.Contains("Content-Type"))
+                {
+                    var contentType = response.Content.Headers.GetValues("Content-Type").First();
+                }
+
             }
             catch (Exception ex)
             {
