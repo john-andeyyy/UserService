@@ -12,9 +12,14 @@ namespace Model.Manager
         }
 
 
-        private string TPP_Username = Environment.GetEnvironmentVariable("TPP_Username"); // USER1
-        private string TPP_Password = Environment.GetEnvironmentVariable("TPP_Password"); // USER1
-        private string TPP_URL = Environment.GetEnvironmentVariable("TPP_URL"); // "http://localhost:5000/v2/";
+        //private string TPP_Username = Environment.GetEnvironmentVariable("TPP_Username"); // USER1
+        //private string TPP_Password = Environment.GetEnvironmentVariable("TPP_Password"); // USER1
+        //private string TPP_URL = Environment.GetEnvironmentVariable("TPP_URL"); // "http://localhost:5000/v2/";
+
+
+        private string TPP_Username = "USER1";
+        private string TPP_Password = "USER1";
+        private string TPP_URL = "http://localhost:5000/v2/";
 
 
         #region 3rd Party
