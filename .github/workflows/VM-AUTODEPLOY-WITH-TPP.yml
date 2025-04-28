@@ -19,8 +19,8 @@ jobs:
 
       - name: Delete old UserService folder and clone the repository
         run: |
-          rm -rf /home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}
-          git clone --branch WITH-TPP https://github.com/john-andeyyy/UserService.git /home/vboxuser/Desktop/${{ secrets.SERVICE_NAME }}
+          rm -rf /home/vboxuser/Desktop/UserService
+          git clone --branch WITH-TPP https://github.com/john-andeyyy/UserService.git /home/vboxuser/Desktop/UserService
 
       - name: Delete old systemd service file (if exists)
         run: |
