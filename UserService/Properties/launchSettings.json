@@ -38,7 +38,7 @@
             "SIGNING_KEY": "64A63153-11C1-4919-9133-EFAF99A9B456",
             "JWT_ISSUER": "https://localhost:5001",
             "JWT_AUDIENCE": "https://localhost:5001",
-            "TPP_URL": "http://localhost:5000/v2/",
+            "TPP_URL": "http://localhost:5050/v2/",
             "TPP_Username": "USER1",
             "TPP_Password": "USER1"
         }

@@ -1,3 +1,5 @@
+# cd actions-1runner 
+# ./run.sh
 name: Auto Deploy to Ubuntu VM WITH TPP
 
 on:
